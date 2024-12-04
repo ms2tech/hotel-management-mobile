@@ -31,12 +31,12 @@ const Login = () => {
     setSubmitting(true);
 
     try {
-      await login(form.email, form.password);
+      const token = await login(form.email, form.password);
       // const result = await getCurrentUser();
       // await setUser(result);
       // await setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
+      Alert.alert("Success", `Token:${token} User signed in successfully`);
       // router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import { Link, router } from 'expo-router'
-import axios from 'axios'
+// import axios from 'axios'
 import { createAccount } from '../../backend-functions/account'
 // import { createUser } from '../../lib/appwrite'
 // import { useGlobalContext } from "../../context/GlobalProvider"
@@ -24,13 +24,15 @@ const Register = () => {
       Alert.alert("Error", "Please fill in all fields");
     }
     setSubmitting(true);
+    console.log('Form', form)
     try {
       const message = await createAccount(form.name, form.email, form.password)  
-      Alert.alert('Success', `Token: ${message}`);
+      Alert.alert('Success', message);
       // setUser(result);
       // setIsLogged(true);
       // router.replace("/home");
     } catch (error) {
+        console.log('Error', error)
         Alert.alert('Error', error.message);
     } finally {
       setSubmitting(false);
