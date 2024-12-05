@@ -30,6 +30,13 @@ const AuthLayout = () => {
             headerShown: false,
           }}
         />
+
+        <Stack.Screen
+          name="modal"
+          options={{
+            presentation: 'modal',
+          }}
+      />
         {/* <Stack.Screen
           name="sign-up"
           options={{

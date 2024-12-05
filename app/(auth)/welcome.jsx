@@ -1,6 +1,5 @@
-
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React, { useState } from 'react'
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 // import FormField from '../../components/FormField'
 import { Link, router } from 'expo-router'
@@ -46,7 +45,7 @@ const Welcome = () => {
 
 
   return (
-<SafeAreaView style={styles.safeAreaView} >
+    <SafeAreaView style={styles.safeAreaView} >
       <ScrollView style={{ marginTop: 0 }}>
         <View style={styles.containerView}>
 

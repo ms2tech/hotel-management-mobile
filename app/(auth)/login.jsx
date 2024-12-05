@@ -1,14 +1,18 @@
+import React, { useState, useContext } from 'react'
 import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
-import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import { Link, router, Redirect } from 'expo-router'
 import { login } from '../../backend-functions/account'
+import { saveToken } from '../../lib/token'
 // import { getCurrentUser, signIn } from "../../lib/appwrite"
-// import { useGlobalContext } from "../../context/GlobalProvider"
+import { useGlobalContext } from '../../context/GlobalProvider'
+import { AuthContext } from '../../context/AuthProvider'
+
 
 const Login = () => {
-  // const { loading, isLogged } = useGlobalContext();
+  const { signIn } = useContext(AuthContext);
+  // const { loading, isLogged, setUser, setIsLogged } = useGlobalContext();
 
   // if (!loading && isLogged) {
   //   return <Redirect href="/home" />
@@ -16,7 +20,7 @@ const Login = () => {
   // else {
   //   return <Redirect href="/login" />
   // }
-  //  const { setUser, setIsLogged } = useGlobalContext();
+
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -31,13 +35,18 @@ const Login = () => {
     setSubmitting(true);
 
     try {
-      const token = await login(form.email, form.password);
-      // const result = await getCurrentUser();
-      // await setUser(result);
-      // await setIsLogged(true);
-
+      const { token, user } = await login(form.email, form.password);
+      if (token) {
+        signIn(user, token); // Save user and token
+      } else {
+        alert('Invalid login');
+      }
+      // await saveToken('jwtToken', token);
+      // await AsyncStorage.setItem('user', JSON.stringify(user));
+      // // await setUser(user);
+      // // await setIsLogged(true);
       Alert.alert("Success", `Token:${token} User signed in successfully`);
-      // router.replace("/home");
+      router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

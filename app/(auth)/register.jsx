@@ -1,16 +1,16 @@
 
+import React, { useState, useContext } from 'react'
 import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
-import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import { Link, router } from 'expo-router'
 // import axios from 'axios'
 import { createAccount } from '../../backend-functions/account'
 // import { createUser } from '../../lib/appwrite'
-// import { useGlobalContext } from "../../context/GlobalProvider"
+import { useGlobalContext } from "../../context/GlobalProvider"
 
 const Register = () => {
-//   const { setUser, setIsLogged } = useGlobalContext();
+  const { setIsLogged, setUser } = useGlobalContext();
   const [submitting, setSubmitting] = useState(false)
   const [form, setForm] = useState({
     name: "",
@@ -26,11 +26,12 @@ const Register = () => {
     setSubmitting(true);
     console.log('Form', form)
     try {
-      const message = await createAccount(form.name, form.email, form.password)  
+      const { user, message, token } = await createAccount(form.name, form.email, form.password)  
+      await saveToken('jwtToken', token);
+      await setUser(user);
+      await setIsLogged(true);
       Alert.alert('Success', message);
-      // setUser(result);
-      // setIsLogged(true);
-      // router.replace("/home");
+      router.replace("/home");
     } catch (error) {
         console.log('Error', error)
         Alert.alert('Error', error.message);

@@ -5,8 +5,11 @@ import { Link } from 'expo-router'
 export default function index() {
   return (
     <View style={styles.container}>
-      <Text>Main Index Page</Text>
+      <Text>TO TEST PAGES</Text>
       <Link href={'/welcome'} style={styles.link}>Go To Welcome Page</Link>
+      <Link href={'/register'} style={styles.link}>Register</Link>
+      <Link href={'/login'} style={styles.link}>Login</Link>
+      <Link href={'/home'} style={styles.link}>Authenticated Home</Link>
     </View>
   )
 }

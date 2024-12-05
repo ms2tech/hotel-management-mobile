@@ -7,7 +7,6 @@ export const useGlobalContext = () => useContext(GlobalContext);
 const GlobalProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
   const [user, setUser] = useState(null);
-//   const [communities, setCommunities] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -26,21 +25,7 @@ const GlobalProvider = ({ children }) => {
       })
       .finally(() => {
         setLoading(false);
-      });
-
-    // getAllVerifiedCommunities()
-    //   .then((res) => {
-    //     if (res) {
-    //       setCommunities(res);
-    //       console.log(res);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   })
-//       .finally(() => {
-//         setLoading(false);
-//       });
+      })
   }, []);
 
   // Function to add a new community
