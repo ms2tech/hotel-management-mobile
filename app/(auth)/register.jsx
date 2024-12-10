@@ -10,7 +10,7 @@ import { createAccount } from '../../backend-functions/account'
 import { useGlobalContext } from "../../context/GlobalProvider"
 
 const Register = () => {
-  const { setIsLogged, setUser } = useGlobalContext();
+  // const { setIsLogged, setUser } = useGlobalContext();
   const [submitting, setSubmitting] = useState(false)
   const [form, setForm] = useState({
     name: "",

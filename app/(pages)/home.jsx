@@ -1,6 +1,5 @@
-
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import React, { useState } from 'react'
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 // import FormField from '../../components/FormField'
@@ -8,16 +7,19 @@ import { Link, router } from 'expo-router'
 // import { createUser } from '../../lib/appwrite'
 // import { useGlobalContext } from "../../context/GlobalProvider"
 
+const H = Dimensions.get('window').height;
+const W = Dimensions.get('window').width;
+
 const Welcome = () => {
 
   return (
     <SafeAreaView style={styles.safeAreaView} >
-      <ScrollView style={{ marginTop: 0 }}>
+      <ScrollView style={{ }}>
         <View style={styles.containerView}>
-          <Text style={styles.logoText}>Welcome to Benji Management</Text>
+          <Text style={styles.logoText}>Welcome !</Text>
   
           <TouchableOpacity style={{ ...styles.authButton, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-            onPress={() => { router.navigate('/modal')}}>
+            onPress={() => { router.navigate('/add-property')}}>
               <MaterialIcons name="add-circle" size={24} color="white" />
               <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 4 }}>Add Property</Text>
           </TouchableOpacity>
@@ -43,10 +45,12 @@ const styles = StyleSheet.create({
     // justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F8F8F8',
-    minHeight: Dimensions.get("window").height 
+    minHeight: Dimensions.get("window").height,
+
   },
 
   logoText: {
+    marginTop: 0.0222*H,
     fontSize: 33,
     fontWeight: '700',
     textAlign: 'center',

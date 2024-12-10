@@ -1,6 +1,5 @@
-import Animated, { FadeIn, SlideInDown } from 'react-native-reanimated';
-import { View, Pressable, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
 import React, { useState } from 'react';
+import { View, Pressable, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
 import FormField from '../../components/FormField';
@@ -10,7 +9,7 @@ import { Link } from 'expo-router';
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
- function Modal() {
+export default function AddProperty() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -59,51 +58,61 @@ const W = Dimensions.get('window').width;
   };
 
   return (
-    <Animated.View entering={FadeIn} style={styles.overlay}>
-      <Link href="/home" asChild>
-        <Pressable style={StyleSheet.absoluteFill} />
-      </Link>
-      <Animated.View entering={SlideInDown} style={styles.modalView}>
-        <View style={styles.header}>
-          <Text style={styles.communityForm.title}>Add Property</Text>
-          <Text style={styles.communityForm.subtitle}>Enter the details to create a community</Text>
-        </View>
+    <SafeAreaView style={styles.form.safeAreaView} >
+          <ScrollView style={styles.form.scrollView}>
+            <View style={styles.form.formContainer}>
+              <View style={{
+                // alignItems: 'center',
+                // justifyContent: 'center',
+                // margin: 7
+              }}>
+                <Text style={styles.form.title}>Add Property</Text>
+                <Text style={styles.form.subtitle}>Enter the details to create a property</Text>
+              </View>
+            
+              <FormField
+                title={"Property Name"}
+                value={form.name}
+                placeholder={'Lorem ipsum'}
+                editable={!submitting}
+                handleChangeText={(e) => setForm({
+                  ...form, name: e
+                })}
+              />
 
-        <FormField
-          title="Property Name"
-          value={form.name}
-          placeholder="Lorem ipsum"
-          editable={!submitting}
-          handleChangeText={(e) => setForm({ ...form, name: e })}
-        />
 
-        <FormField
-          title="Property Description"
-          value={form.description}
-          editable={!submitting}
-          placeholder="Type here..."
-          multiline
-          numberOfLines={8}
-          handleChangeText={(e) => setForm({ ...form, description: e })}
-        />
+              <FormField
+                title={"Property Description"}
+                value={form.description}
+                editable={!submitting}
+                placeholder={'Type here...'}
+                multiline={true}
+                numberOfLines = {8}
+                handleChangeText={(e) => setForm({
+                  ...form, description: e
+                })}
+              />
 
-        <FileField
-          title="Add image"
-          editable={!submitting}
-          selectedImage={selectedImage}
-          onPress={pickImageAsync}
-        />
+              <FileField
+                title={"Add banner"}
+                titleText={'Add banner'}
+                editable={!submitting}
+                selectedImage={selectedImage}
+                onPress={pickImageAsync}
+              />
 
-        <TouchableOpacity style={styles.communityForm.actionButton} onPress={submit} disabled={submitting}>
-          {submitting ? <ActivityIndicator /> : <Text style={styles.communityForm.textBtn}>Continue</Text>}
-        </TouchableOpacity>
-      </Animated.View>
-    </Animated.View>
+              <TouchableOpacity style={styles.form.actionButton} onPress={submit} disabled={submitting}>
+                { submitting ? <ActivityIndicator /> : <Text style={styles.form.textBtn}>Save</Text>}
+                
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-    communityForm: {
+    form: {
         safeAreaView: {
           backgroundColor: '#F8F8F8',
         },
@@ -134,6 +143,7 @@ const styles = StyleSheet.create({
           borderRadius: 20,
           minHeight: 0.7221*H, 
           padding: 7,
+          marginTop: 0.0222*H
           // paddingTop: 'auto',
         
         },
@@ -191,4 +201,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default Modal
+

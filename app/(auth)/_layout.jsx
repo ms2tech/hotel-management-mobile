@@ -1,3 +1,4 @@
+import React from 'react'
 import { Redirect, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 
@@ -25,18 +26,12 @@ const AuthLayout = () => {
           }}
         />
         <Stack.Screen
-          name="login"
-          options={{
-            headerShown: false,
-          }}
+            name="login"
+            options={{
+                headerShown: false,
+            }}
         />
-
-        <Stack.Screen
-          name="modal"
-          options={{
-            presentation: 'modal',
-          }}
-      />
+      
         {/* <Stack.Screen
           name="sign-up"
           options={{

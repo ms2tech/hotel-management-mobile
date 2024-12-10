@@ -1,4 +1,5 @@
 
+import React from 'react'
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -26,4 +27,4 @@ const AuthProvider = ({ children }) => {
   );
 };
 
-export { AuthContext, AuthProvider };
+export default { AuthContext, AuthProvider };
