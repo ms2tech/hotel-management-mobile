@@ -16,7 +16,7 @@ const Welcome = () => {
     <SafeAreaView style={styles.safeAreaView} >
       <ScrollView style={{ }}>
         <View style={styles.containerView}>
-          <Text style={styles.logoText}>Welcome !</Text>
+          <Text style={styles.title}>Welcome !</Text>
   
           <TouchableOpacity style={{ ...styles.authButton, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
             onPress={() => { router.navigate('/add-property')}}>
@@ -32,6 +32,14 @@ const Welcome = () => {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 0.0465*W,
+    color: '#6151DC',
+    fontWeight: '700',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    fontSize: 36
+  },
   safeAreaView: {
     backgroundColor: '#F8F8F8',
     height: '100%'

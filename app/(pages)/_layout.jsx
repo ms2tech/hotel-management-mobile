@@ -15,6 +15,8 @@ const myProperties = [
 ];
 
 const logout = async () => {
+    await SecureStore.deleteItemAsync('jwtToken')
+    await AsyncStorage.removeItem('user')
   router.replace('/login'); // Redirect user to login screen
 };
 

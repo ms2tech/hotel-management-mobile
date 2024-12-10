@@ -4,6 +4,8 @@ import { View, Text, ScrollView, ActivityIndicator, StyleSheet, TouchableOpacity
 import { SafeAreaView } from 'react-native-safe-area-context'
 import FormField from '../../components/FormField'
 import { Link, router } from 'expo-router'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 // import axios from 'axios'
 import { createAccount } from '../../backend-functions/account'
 // import { createUser } from '../../lib/appwrite'
@@ -23,14 +25,16 @@ const Register = () => {
     if (form.name === "" || form.email === "" || form.password === "") {
       Alert.alert("Error", "Please fill in all fields");
     }
+
     setSubmitting(true);
     console.log('Form', form)
+
     try {
       const { user, message, token } = await createAccount(form.name, form.email, form.password)  
-      await saveToken('jwtToken', token);
-      await setUser(user);
-      await setIsLogged(true);
-      Alert.alert('Success', message);
+      // signInUser(user, token)
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+      await SecureStore.setItemAsync('jwtToken', token);
+      Alert.alert("Success", "Successfully registered");
       router.replace("/home");
     } catch (error) {
         console.log('Error', error)

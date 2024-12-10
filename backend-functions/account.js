@@ -1,4 +1,6 @@
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import { env } from '../constants'
 
 const API_BASE_URL = env.API_BASE_URL // 'http://10.10.10.119:3000/api'
@@ -25,6 +27,10 @@ export const authenticate = async (email, password) => {
         throw new Error(error.response?.data?.error || 'Login failed')
     }
 };
+
+export const signInUser = async (user, token) => {
+
+}
 
 export const logOut = async () => {
     await SecureStore.deleteItemAsync('jwtToken')
