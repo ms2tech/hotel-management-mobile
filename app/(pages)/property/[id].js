@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useLayoutEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 export default function PropertyScreen() {
-  const { id } = useLocalSearchParams(); // Get property ID from the route
+  const { id } = useLocalSearchParams(); // Extract the property ID from the route
+  const navigation = useNavigation();
 
   // Example property data
   const propertyData = {
@@ -13,6 +15,15 @@ export default function PropertyScreen() {
   };
 
   const property = propertyData[id];
+
+  // Dynamically set the header title
+  useLayoutEffect(() => {
+    if (property) {
+      navigation.setOptions({ title: property.name });
+    } else {
+      navigation.setOptions({ title: 'Property' });
+    }
+  }, [navigation, property]);
 
   if (!property) {
     return (
@@ -29,21 +40,6 @@ export default function PropertyScreen() {
     </View>
   );
 }
-
-export const options = ({ route }) => {
-  const { id } = route.params || {}; // Get the property ID from route params
-  const propertyData = {
-    '1': { name: 'Villa 101' },
-    '2': { name: 'Lakeview Apartment' },
-    '3': { name: 'City Center Loft' },
-  };
-
-  const property = propertyData[id];
-
-  return {
-    title: property ? property.name : 'Property',
-  };
-};
 
 const styles = StyleSheet.create({
   container: {
