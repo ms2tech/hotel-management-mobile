@@ -5,7 +5,7 @@ import FormField from '../../components/FormField'
 import { Link, router, Redirect } from 'expo-router'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
-// import { authenticate } from '../../backend-functions/account'
+import { authenticate } from '../../backend-functions/account'
 // import { AuthContext } from '../../context/AuthProvider'
 
 
@@ -36,14 +36,15 @@ const Login = () => {
       setSubmitting(true);
   
       try {
-        const { token, user } = await login(form.email, form.password);
+        const { token, user } = await authenticate(form.email, form.password);
         
-        if (token) {
+        if (user && token) {
           Alert.alert("Success", `Token:${token} User signed in successfully`);
        
           // signInUser(user, token); // Save user and token
           await AsyncStorage.setItem('user', JSON.stringify(user));
           await SecureStore.setItemAsync('jwtToken', token);
+
           Alert.alert("Success", "You are successfully signed in");
           router.replace("/home");
         
@@ -54,8 +55,6 @@ const Login = () => {
         // await AsyncStorage.setItem('user', JSON.stringify(user));
         // // await setUser(user);
         // // await setIsLogged(true);
-        
-        router.replace("/home");
       } catch (error) {
         Alert.alert("Error", error.message);
       } finally {

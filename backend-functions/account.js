@@ -11,7 +11,8 @@ console.log('ENV', env)
 export const createAccount = async (name, email, password) => {
     try {
         const response = await axios.post(`${API_URL}/create-account`, { name, email, password })
-        return response
+        console.log('Reg Response', response.data)
+        return response.data
     } catch (error) {
         console.log('Error', error)
         throw new Error(error.response?.data?.error || 'Signup failed')
@@ -37,9 +38,13 @@ export const logOut = async () => {
     await AsyncStorage.removeItem('user')
 }
 
-export const getCurrentUser = async () => {
-    return {
-        email: 'moussasarr490@gmail.com',
-        name: "Moussa Sarr"
-    }
-}
+// const getUser = async () => {
+//     try {
+//       const userString = await AsyncStorage.getItem('user');
+//       if (userString) {
+//         setUser(JSON.parse(userString));
+//       }
+//     } catch (error) {
+//       console.error('Error fetching user:', error);
+//     }
+//   }

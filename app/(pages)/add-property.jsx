@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Pressable, Text, ActivityIndicator, StyleSheet, TouchableOpacity, Alert, Dimensions, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as ImagePicker from 'expo-image-picker'; // Import ImagePicker
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router'
+import axios from 'axios'
 import FormField from '../../components/FormField';
 import FileField from '../../components/FileField';
 import { Link } from 'expo-router';
+import { env } from '../../constants'
 
+const API_BASE_URL = env.API_BASE_URL
 const H = Dimensions.get('window').height;
 const W = Dimensions.get('window').width;
 
@@ -18,6 +23,8 @@ export default function AddProperty() {
     description: '',
     thumbnail: {},
   });
+
+  const [user, setUser] = useState(null);
 
   const pickImageAsync = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -45,17 +52,55 @@ export default function AddProperty() {
 
   const submit = async () => {
     setSubmitting(true);
+    if (!form.name){
+      Alert.alert('Property Name is required')
+      return
+    }
+
     try {
       // Add validation logic here
       // Simulate a successful submission
-      alert('Form submitted successfully!');
+      console.log('API_BASE_URL', API_BASE_URL)
+    
+      // POST request
+      const response = await axios.post(`${API_BASE_URL}/property/create`, 
+        { 
+          ...form, 
+          owner: user
+        });
+    
+      console.log('Response:', response);
+      Alert.alert('Property successfully added !');
+      router.push(`/property/${response.data.property._id}`)
+      // Add properties to current properties state
+      // Navigate to the actual property page
+
     } catch (error) {
-      console.error('Submit Error:', error.message);
+      console.error('Submit Error:', error);
       Alert.alert('Error', error.message);
     } finally {
       setSubmitting(false);
     }
   };
+
+
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const userString = await AsyncStorage.getItem('user');
+        if (userString) {
+          setUser(JSON.parse(userString));
+          console.log('User String', userString)
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   return (
     <SafeAreaView style={styles.form.safeAreaView} >

@@ -7,6 +7,7 @@ const AuthContext = React.createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isLoggedIn, setIsLogged] = useState(null)
 
   const signIn = async (userData, token) => {
     setUser(userData);
@@ -19,6 +20,7 @@ const AuthProvider = ({ children }) => {
     await AsyncStorage.removeItem('user');
     await SecureStore.deleteItemAsync('jwtToken');
   };
+
 
   return (
     <AuthContext.Provider value={{ user, signIn, signOut }}>

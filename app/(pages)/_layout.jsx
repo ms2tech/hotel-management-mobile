@@ -1,11 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
 import { router } from 'expo-router';
+import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { env } from '../../constants'
+const API_BASE_URL = env.API_BASE_URL 
 
 // Example dynamic property data
 const myProperties = [
@@ -17,10 +22,46 @@ const myProperties = [
 const logout = async () => {
     await SecureStore.deleteItemAsync('jwtToken')
     await AsyncStorage.removeItem('user')
-  router.replace('/login'); // Redirect user to login screen
+    router.replace('/login'); // Redirect user to login screen
 };
 
 export default function Layout() {
+  const [user, setUser] = useState()
+  const [properties, setProperties] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentUserProperties = async () => {
+      try {
+        setLoading(true)
+        const userString = await AsyncStorage.getItem('user');
+        if (userString) {
+          const usr = JSON.parse(userString)
+          console.log('USER', usr)
+          setUser(usr)
+          const token = await AsyncStorage.getItem('authToken') // Retrieve token from storage
+          const response = await axios.get(`${API_BASE_URL}/properties/fetch-user-properties?ownerId=${usr._id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`, // Pass token for authentication
+            },
+            // params: {
+            //   ownerId: usr._id, // Add your query parameters here
+            //   // r
+            // },
+          })
+          console.log('RESPONSE', response)
+          setProperties(response.data); // Update state with fetched properties
+        } 
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      } finally {
+        setLoading(false)
+      }
+    };
+    fetchCurrentUserProperties()
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <Drawer
@@ -33,10 +74,10 @@ export default function Layout() {
             <Text style={styles.sectionTitle}>My Properties</Text>
 
             {/* Dynamic Property Links */}
-            {myProperties.map((property) => (
+            {properties.map((property) => (
               <TouchableOpacity
-                key={property.id}
-                onPress={() => router.push(`/property/${property.id}`)}
+                key={property._id}
+                onPress={() => router.push(`/property/${property._id}`)}
                 style={styles.propertyLink}
               >
                 <MaterialIcons name="apartment" size={20} color="#333" />
