@@ -5,13 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
-import { env } from '../../../constants';
+import { env } from '../../../../constants';
 
 const API_BASE_URL = env.API_BASE_URL;
 const H = Dimensions.get('window').height
 const W = Dimensions.get('window').width
 
-export default function PropertyScreen() {
+export default function PropertyScreen(props) {
+    console.log('Props', props)
   const { id } = useLocalSearchParams(); // Extract the property ID from the route
   const navigation = useNavigation();
   const [property, setProperty] = useState(null); // Hold the fetched property data
@@ -76,23 +77,27 @@ export default function PropertyScreen() {
   return (
     <View style={styles.container}>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity style={{ ...styles.authButton, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
-              onPress={() => { 
-                // router.navigate('/add-property')
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity style={{ ...styles.authButton, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+            onPress={() => { 
+                router.push(`property/${id}/add-department`)
+            }}>
+              <MaterialIcons name="add-circle" size={24} color="white" />
+              { 
+                (property.type === 'HOTEL') && <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 3 }}>Add Department</Text>
+              }
 
-              }}>
-                <MaterialIcons name="add-circle" size={24} color="white" />
-                <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 3 }}>Add New</Text>
-            </TouchableOpacity>
-        </View>
+              {
+                (property.type === 'APARTMENT') &&  <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 3 }}>Add Units</Text>
+              }
+        </TouchableOpacity>
+      </View>
          
-
       <View style={{ marginTop: 0.0222*H }}>
         {/* <Text style={styles.title}>{property.name}</Text> */}
         {/* <Text style={styles.description}>{property.description}</Text> */}
         <Text style={styles.issueText}>     
-          There are no current issues here
+          There are no departments here
         </Text>
       </View>
 
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
     // // top: 10,
     // left: 10,
     width: '100%',
-    marginLeft: '100%'
+    // marginLeft: '20%'
    
   },
   text: {
@@ -144,7 +149,7 @@ const styles = StyleSheet.create({
   authButton: {
     backgroundColor: '#6151DC',
     color: 'white',
-    width: '44%',
+    // width: '44%',
     alignItems: 'center',
     paddingHorizontal: 10,
     paddingVertical: 7,

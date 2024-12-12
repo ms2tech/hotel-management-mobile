@@ -111,6 +111,28 @@ export default function Layout() {
           }}
         />
 
+
+          <Drawer.Screen
+                name="property/add-department"
+                options={{
+                    drawerLabel: "Add Department", // Static route label
+                }}
+            />
+            <Drawer.Screen
+                name="property/[id]/index"
+                options={{
+                    drawerItemStyle: { display: 'none' }, // Hide dynamic route from drawer
+                }}
+            />
+
+
+            {/* <Drawer.Screen
+                name="property/[id]/index"
+                options={{
+                    drawerItemStyle: { display: 'none' }, // Hide dynamic route from drawer
+                }}
+            />       */}
+
         {/* Dynamic Property Screens */}
         {myProperties.map((property) => (
           <Drawer.Screen
