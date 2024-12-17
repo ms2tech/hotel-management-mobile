@@ -144,6 +144,23 @@ export default function Layout() {
         ))}
 
 
+
+        <Drawer.Screen
+          name="property/[id]/add-department"
+          options={{
+            drawerItemStyle: { display: 'none' }, // Hide from the drawer
+          }}
+        />
+
+        <Drawer.Screen
+          name="property/[id]/department/[departmentId]"
+          options={{
+            drawerItemStyle: { display: 'none' }, // Hide from the drawer
+          }}
+        />
+
+
+
         
       </Drawer>
       
