@@ -7,36 +7,43 @@ import { env } from '../../../../constants';
 const API_BASE_URL = env.API_BASE_URL;
 
 export default function PropertyLayout() {
-    const { id } = useLocalSearchParams(); // Extract the dynamic route param
-    const navigation = useNavigation();
-    const [propertyName, setPropertyName] = useState('Loading...'); // Default placeholder
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { id } = useLocalSearchParams(); // Get dynamic ID
+    const navigation = useNavigation(); // Access navigation object
+    const [property, setProperty] = useState(null); // Property data
+    const [loading, setLoading] = useState(true); // Loading state
+    const [error, setError] = useState(null); // Error state
 
+    // Fetch property details
     useEffect(() => {
         const fetchProperty = async () => {
+            setLoading(true);
+            setError(null);
             try {
                 const response = await axios.get(`${API_BASE_URL}/property/${id}`);
-                const name = response.data?.name || 'Property';
-                setPropertyName(name);
+                setProperty(response.data); // Set fetched property data
             } catch (err) {
-                setPropertyName('Property'); // Fallback title
-                setError('Failed to load property');
+                console.error('Error fetching property:', err.message);
+                setError('Failed to fetch property details');
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchProperty();
+        if (id) fetchProperty();
     }, [id]);
 
-    // Update navigation options dynamically
+    // Update the header title dynamically when `property` is updated
     useEffect(() => {
-        navigation.setOptions({
-            title: propertyName, // Dynamically set the header title
-        });
-    }, [navigation, propertyName]);
+        if (property?.name) {
+            navigation.setOptions({ title: property.name });
+        } else if (loading) {
+            navigation.setOptions({ title: 'Loading...' }); // Placeholder during fetch
+        } else {
+            navigation.setOptions({ title: 'Property' }); // Fallback
+        }
+    }, [navigation, property?.name, loading]);
 
+    // Loading state
     if (loading) {
         return (
             <View style={styles.center}>
@@ -45,6 +52,7 @@ export default function PropertyLayout() {
         );
     }
 
+    // Error state
     if (error) {
         return (
             <View style={styles.center}>
@@ -53,7 +61,7 @@ export default function PropertyLayout() {
         );
     }
 
-    return <Slot />;
+    return <Slot />; // Render child routes dynamically
 }
 
 const styles = StyleSheet.create({

@@ -121,12 +121,12 @@ export default function Layout() {
             />
      
 
-            <Drawer.Screen
+            {/* <Drawer.Screen
                 name="property/[id]"
                 options={{
                     drawerItemStyle: { display: 'none' }, // Hide dynamic route from drawer
                 }}
-            />      
+            />       */}
 
         {/* Dynamic Property Screens */}
         {myProperties.map((property) => (
