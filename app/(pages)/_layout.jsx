@@ -115,24 +115,18 @@ export default function Layout() {
           <Drawer.Screen
                 name="property/add-department"
                 options={{
-                    drawerLabel: "Add Department", // Static route label
+                    // drawerLabel: "Add Department", // Static route label
                     drawerItemStyle: { display: 'none' }
                 }}
             />
+     
+
             <Drawer.Screen
-                name="property/[id]/index"
+                name="property/[id]"
                 options={{
                     drawerItemStyle: { display: 'none' }, // Hide dynamic route from drawer
                 }}
-            />
-
-
-            {/* <Drawer.Screen
-                name="property/[id]/index"
-                options={{
-                    drawerItemStyle: { display: 'none' }, // Hide dynamic route from drawer
-                }}
-            />       */}
+            />      
 
         {/* Dynamic Property Screens */}
         {myProperties.map((property) => (
@@ -140,7 +134,7 @@ export default function Layout() {
             key={property.id}
             name={`property/${property.id}`}
             options={{
-              drawerLabel: property.name,
+              drawerLabel: String.valueOf(property.name || 'Property'),
               title: property.name,
               drawerIcon: ({ size, color }) => (
                 <MaterialIcons name="apartment" size={size} color={color} />
@@ -149,13 +143,7 @@ export default function Layout() {
           />
         ))}
 
-        {/* Hidden Dynamic Route */}
-        <Drawer.Screen
-          name="property/[id]" // Match the dynamic route
-          options={{
-            drawerItemStyle: { display: 'none' }, // Hide from the drawer
-          }}
-        />
+
         
       </Drawer>
       
