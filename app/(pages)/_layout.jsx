@@ -116,6 +116,7 @@ export default function Layout() {
                 name="property/add-department"
                 options={{
                     drawerLabel: "Add Department", // Static route label
+                    drawerItemStyle: { display: 'none' }
                 }}
             />
             <Drawer.Screen
@@ -155,7 +156,9 @@ export default function Layout() {
             drawerItemStyle: { display: 'none' }, // Hide from the drawer
           }}
         />
+        
       </Drawer>
+      
     </GestureHandlerRootView>
   );
 }

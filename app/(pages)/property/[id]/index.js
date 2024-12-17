@@ -12,7 +12,7 @@ const H = Dimensions.get('window').height
 const W = Dimensions.get('window').width
 
 export default function PropertyScreen(props) {
-    console.log('Props', props)
+  console.log('Props', props)
   const { id } = useLocalSearchParams(); // Extract the property ID from the route
   const navigation = useNavigation();
   const [property, setProperty] = useState(null); // Hold the fetched property data
@@ -96,9 +96,15 @@ export default function PropertyScreen(props) {
       <View style={{ marginTop: 0.0222*H }}>
         {/* <Text style={styles.title}>{property.name}</Text> */}
         {/* <Text style={styles.description}>{property.description}</Text> */}
-        <Text style={styles.issueText}>     
-          There are no departments here
-        </Text>
+       
+        {
+          (property.type === 'HOTEL') && (property.departments?.length < 1) && <Text style={styles.issueText}> There are no departments here </Text>
+        }   
+
+        {
+          (property.type === 'APARTMENT') && (property.units?.length < 1) && <Text style={styles.issueText}> No units added yet </Text>
+        }
+          
       </View>
 
     </View>
