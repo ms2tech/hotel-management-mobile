@@ -105,6 +105,14 @@ function Layout() {
             title: 'Add Department',
           }}
         />
+
+        <Drawer.Screen
+          name="property/[id]/add-unit"
+          options={{
+            drawerLabel: "Add Unit",
+            drawerItemStyle: { display: 'none' }, // Hides this screen in the drawer
+          }}
+        />
         <Drawer.Screen
           name="property/[id]/department/[departmentId]"
           options={{
