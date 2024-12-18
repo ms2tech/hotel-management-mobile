@@ -8,7 +8,7 @@ import {
   FlatList,
   Dimensions,
 } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
@@ -32,12 +32,13 @@ export default function PropertyScreen() {
       navigation.setOptions({ title: 'Property' });
     }
   }, [navigation, property]);
-
+  
   useEffect(() => {
     const fetchProperty = async () => {
       try {
         setLoading(true);
         setError(null);
+  
         const response = await axios.get(`${API_BASE_URL}/property/${id}`);
         setProperty(response.data);
       } catch (err) {
@@ -46,7 +47,7 @@ export default function PropertyScreen() {
         setLoading(false);
       }
     };
-
+  
     if (id) fetchProperty();
   }, [id]);
 
@@ -88,56 +89,61 @@ export default function PropertyScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => {
-            router.push(
-              property.type === 'APARTMENT'
-                ? `property/${id}/add-unit`
-                : `property/${id}/add-department`
-            );
-          }}
-        >
-          <MaterialIcons name="add-circle" size={24} color="white" />
-          <Text style={styles.addButtonText}>
-            {property.type === 'HOTEL' ? 'Add Department' : 'Add Unit'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      {
+        property && (<>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={() => {
+                router.push(
+                  property.type === 'APARTMENT'
+                    ? `property/${id}/add-unit`
+                    : `property/${id}/add-department`
+                );
+              }}
+            >
+              <MaterialIcons name="add-circle" size={24} color="white" />
+              <Text style={styles.addButtonText}>
+                {property.type === 'HOTEL' ? 'Add Department' : 'Add Unit'}
+              </Text>
+            </TouchableOpacity>
+          </View>
 
-      {/* <Text style={styles.title}>{property.name}</Text> */}
+          {/* <Text style={styles.title}>{property.name}</Text> */}
 
-      {/* Render FlatList for departments or units */}
-      {property.type === 'HOTEL' ? (
-        <>
-          <Text style={styles.subtitle}>Departments</Text>
-          {property.departments?.length ? (
-            <FlatList
-              data={property.departments}
-              keyExtractor={(item) => item._id}
-              renderItem={renderItem}
-              contentContainerStyle={styles.listContainer}
-            />
+          {/* Render FlatList for departments or units */}
+          {property.type === 'HOTEL' ? (
+            <>
+              <Text style={styles.subtitle}>Departments</Text>
+              {property.departments?.length ? (
+                <FlatList
+                  data={property.departments}
+                  keyExtractor={(item) => item._id || Math.random().toString()} 
+                  renderItem={renderItem}
+                  contentContainerStyle={styles.listContainer}
+                />
+              ) : (
+                <Text style={styles.noDataText}>No departments added.</Text>
+              )}
+            </>
           ) : (
-            <Text style={styles.noDataText}>No departments added.</Text>
+            <>
+              <Text style={styles.subtitle}>Units</Text>
+              {property.units?.length ? (
+                <FlatList
+                  data={property.units}
+                  keyExtractor={(item) => item._id || Math.random().toString()} 
+                  renderItem={renderItem}
+                  contentContainerStyle={styles.listContainer}
+                />
+              ) : (
+                <Text style={styles.noDataText}>No units added.</Text>
+              )}
+            </>
           )}
         </>
-      ) : (
-        <>
-          <Text style={styles.subtitle}>Units</Text>
-          {property.units?.length ? (
-            <FlatList
-              data={property.units}
-              keyExtractor={(item) => item._id}
-              renderItem={renderItem}
-              contentContainerStyle={styles.listContainer}
-            />
-          ) : (
-            <Text style={styles.noDataText}>No units added.</Text>
-          )}
-        </>
-      )}
+        )
+      }
     </View>
   );
 }
