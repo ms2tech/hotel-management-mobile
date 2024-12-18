@@ -1,5 +1,5 @@
-import { Slot, useLocalSearchParams, useNavigation } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { Slot, useNavigation, useLocalSearchParams } from 'expo-router';
+import { useLayoutEffect, useState } from 'react';
 import { ActivityIndicator, View, StyleSheet, Text } from 'react-native';
 import axios from 'axios';
 import { env } from '../../../../constants';
@@ -7,72 +7,68 @@ import { env } from '../../../../constants';
 const API_BASE_URL = env.API_BASE_URL;
 
 export default function PropertyLayout() {
-    const { id } = useLocalSearchParams(); // Get dynamic ID
-    const navigation = useNavigation(); // Access navigation object
-    const [property, setProperty] = useState(null); // Property data
-    const [loading, setLoading] = useState(true); // Loading state
-    const [error, setError] = useState(null); // Error state
+  const { id } = useLocalSearchParams(); // Extract dynamic ID
+  const navigation = useNavigation();
+  const [propertyName, setPropertyName] = useState('Loading...'); // Default title
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    // Fetch property details
-    useEffect(() => {
-        const fetchProperty = async () => {
-            setLoading(true);
-            setError(null);
-            try {
-                const response = await axios.get(`${API_BASE_URL}/property/${id}`);
-                setProperty(response.data); // Set fetched property data
-            } catch (err) {
-                console.error('Error fetching property:', err.message);
-                setError('Failed to fetch property details');
-            } finally {
-                setLoading(false);
-            }
-        };
+  // Fetch property details
+  useLayoutEffect(() => {
+    const fetchProperty = async () => {
+      setLoading(true);
+      setError(null);
 
-        if (id) fetchProperty();
-    }, [id]);
+      try {
+        const response = await axios.get(`${API_BASE_URL}/property/${id}`);
+        const fetchedPropertyName = response.data?.name || 'Unnamed Property';
 
-    // Update the header title dynamically when `property` is updated
-    useEffect(() => {
-        if (property?.name) {
-            navigation.setOptions({ title: property.name });
-        } else if (loading) {
-            navigation.setOptions({ title: 'Loading...' }); // Placeholder during fetch
-        } else {
-            navigation.setOptions({ title: 'Property' }); // Fallback
-        }
-    }, [navigation, property?.name, loading]);
+        setPropertyName(fetchedPropertyName); // Update the title state
 
-    // Loading state
-    if (loading) {
-        return (
-            <View style={styles.center}>
-                <ActivityIndicator size="large" color="#0000ff" />
-            </View>
-        );
+        // Dynamically update the header title
+        navigation.setOptions({ title: fetchedPropertyName });
+      } catch (err) {
+        setError('Failed to load property');
+        setPropertyName('Property'); // Default fallback
+        navigation.setOptions({ title: 'Property' });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (id) {
+      fetchProperty(); // Fetch new property when `id` changes
     }
+  }, [id, navigation]); // Runs synchronously when `id` or `navigation` changes
 
-    // Error state
-    if (error) {
-        return (
-            <View style={styles.center}>
-                <Text style={styles.error}>{error}</Text>
-            </View>
-        );
-    }
+  if (loading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
-    return <Slot />; // Render child routes dynamically
+  if (error) {
+    return (
+      <View style={styles.center}>
+        <Text style={styles.error}>{error}</Text>
+      </View>
+    );
+  }
+
+  return <Slot />;
 }
 
 const styles = StyleSheet.create({
-    center: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    error: {
-        fontSize: 16,
-        color: 'red',
-        textAlign: 'center',
-    },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  error: {
+    fontSize: 16,
+    color: 'red',
+    textAlign: 'center',
+  },
 });

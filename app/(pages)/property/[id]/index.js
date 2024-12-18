@@ -80,7 +80,7 @@ export default function PropertyScreen(props) {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={{ ...styles.authButton, display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
             onPress={() => { 
-                router.push(`property/${id}/add-department`)
+                router.push(property.type === 'APARTMENT' ? `property/${id}/add-unit` : `property/${id}/add-department`)
             }}>
               <MaterialIcons name="add-circle" size={24} color="white" />
               { 
@@ -88,7 +88,7 @@ export default function PropertyScreen(props) {
               }
 
               {
-                (property.type === 'APARTMENT') &&  <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 3 }}>Add Units</Text>
+                (property.type === 'APARTMENT') &&  <Text style={{ color: 'white', fontSize: 17, marginHorizontal: 3 }}>Add Unit</Text>
               }
         </TouchableOpacity>
       </View>
@@ -96,15 +96,32 @@ export default function PropertyScreen(props) {
       <View style={{ marginTop: 0.0222*H }}>
         {/* <Text style={styles.title}>{property.name}</Text> */}
         {/* <Text style={styles.description}>{property.description}</Text> */}
-       
-        {
-          (property.type === 'HOTEL') && (property.departments?.length < 1) && <Text style={styles.issueText}> There are no departments here </Text>
-        }   
 
         {
-          (property.type === 'APARTMENT') && (property.units?.length < 1) && <Text style={styles.issueText}> No units added yet </Text>
-        }
-          
+          (property.type === 'HOTEL') && 
+          <>
+            {
+              (property?.departments?.length >= 1) ?
+              <Text style={styles.issueText}>Property has {property?.length} departments</Text>
+              : <Text style={styles.issueText}> There are no departments here </Text>
+            }
+          </>
+        }   
+
+
+        {
+          (property.type === 'APARTMENT') && 
+          <>
+            {
+              (property?.suites?.length >= 1) ?
+              <Text style={styles.issueText}>Property has {property?.length} suites</Text>
+              : <Text style={styles.issueText}> There are no suites here </Text>
+            }
+          </>
+        } 
+       
+       
+      
       </View>
 
     </View>
