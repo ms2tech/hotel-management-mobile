@@ -98,7 +98,7 @@ export default function DepartmentDetails() {
     
             console.log('Response:', response.data);
             Alert.alert('Issue successfully added!');
-            setDepartment(response.data);
+            setDepartment(response.data.department);
             setModalVisible(false);
             setForm({
                 title: '',
@@ -186,7 +186,7 @@ export default function DepartmentDetails() {
                             <Text style={styles.issueTitle}>{issue.title}</Text>
                             <Text style={styles.issueDescription}>{issue.description}</Text>
                             <View style={styles.statusContainer}>
-                                <Text style={styles.status}>{issue.status.toUpperCase()}</Text>
+                                <Text style={styles.status}>{issue?.status?.toUpperCase()}</Text>
                             </View>
 
                             {/* Mark as Complete Button */}
