@@ -22,7 +22,8 @@ export const createAccount = async (name, email, password) => {
 export const authenticate = async (email, password) => {
     try {
         const response = await axios.post(`${API_URL}/login`, { email, password })
-        return response
+        console.log('Response', response)
+        return response.data
     } catch (error) {
         console.log('Error', error)
         throw new Error(error.response?.data?.error || 'Login failed')

@@ -123,7 +123,7 @@ function Layout() {
         />
 
         {/* Dynamic Property Screens */}
-        {properties.map((property) => (
+        {/* {properties.map((property) => (
           <Drawer.Screen
             key={property._id}
             name={`property/${property._id}`}
@@ -135,7 +135,7 @@ function Layout() {
               ),
             }}
           />
-        ))}
+        ))} */}
       </Drawer>
     </GestureHandlerRootView>
   );

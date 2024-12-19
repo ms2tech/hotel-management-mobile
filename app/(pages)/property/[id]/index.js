@@ -6,50 +6,48 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   FlatList,
-  Dimensions,
 } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams, router } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { env } from '../../../../constants';
 
 const API_BASE_URL = env.API_BASE_URL;
-const H = Dimensions.get('window').height;
-const W = Dimensions.get('window').width;
 
 export default function PropertyScreen() {
   const { id } = useLocalSearchParams(); // Extract property ID
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // Import and use navigation
   const [property, setProperty] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useLayoutEffect(() => {
-    if (property) {
-      navigation.setOptions({ title: property.name });
-    } else {
-      navigation.setOptions({ title: 'Property' });
-    }
-  }, [navigation, property]);
-  
+  // Fetch property data
   useEffect(() => {
     const fetchProperty = async () => {
       try {
         setLoading(true);
-        setError(null);
-  
         const response = await axios.get(`${API_BASE_URL}/property/${id}`);
         setProperty(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || 'Failed to fetch property');
+        setError('Failed to fetch property');
       } finally {
         setLoading(false);
       }
     };
-  
-    if (id) fetchProperty();
+
+    setProperty(null); // Reset property state
+    fetchProperty();
   }, [id]);
+
+  // Immediate header updates when property changes
+  useLayoutEffect(() => {
+    if (property?.name) {
+      navigation.setOptions({ title: property.name });
+    } else {
+      navigation.setOptions({ title: 'Property' });
+    }
+  }, [property, navigation]);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity style={styles.itemContainer}>
@@ -79,71 +77,55 @@ export default function PropertyScreen() {
     );
   }
 
-  if (!property) {
-    return (
-      <View style={styles.center}>
-        <Text style={styles.title}>Property Not Found</Text>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.container}>
-      {
-        property && (<>
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={() => {
-                router.push(
-                  property.type === 'APARTMENT'
-                    ? `property/${id}/add-unit`
-                    : `property/${id}/add-department`
-                );
-              }}
-            >
-              <MaterialIcons name="add-circle" size={24} color="white" />
-              <Text style={styles.addButtonText}>
-                {property.type === 'HOTEL' ? 'Add Department' : 'Add Unit'}
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() => {
+            router.push(
+              property.type === 'APARTMENT'
+                ? `property/${id}/add-unit`
+                : `property/${id}/add-department`
+            );
+          }}
+        >
+          <MaterialIcons name="add-circle" size={24} color="white" />
+          <Text style={styles.addButtonText}>
+            {property.type === 'HOTEL' ? 'Add Department' : 'Add Unit'}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
-          {/* <Text style={styles.title}>{property.name}</Text> */}
-
-          {/* Render FlatList for departments or units */}
-          {property.type === 'HOTEL' ? (
-            <>
-              <Text style={styles.subtitle}>Departments</Text>
-              {property.departments?.length ? (
-                <FlatList
-                  data={property.departments}
-                  keyExtractor={(item) => item._id || Math.random().toString()} 
-                  renderItem={renderItem}
-                  contentContainerStyle={styles.listContainer}
-                />
-              ) : (
-                <Text style={styles.noDataText}>No departments added.</Text>
-              )}
-            </>
+      {property.type === 'HOTEL' ? (
+        <>
+          <Text style={styles.subtitle}>Departments</Text>
+          {property.departments?.length ? (
+            <FlatList
+              data={property.departments}
+              keyExtractor={(item) => item._id}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContainer}
+            />
           ) : (
-            <>
-              <Text style={styles.subtitle}>Units</Text>
-              {property.units?.length ? (
-                <FlatList
-                  data={property.units}
-                  keyExtractor={(item) => item._id || Math.random().toString()} 
-                  renderItem={renderItem}
-                  contentContainerStyle={styles.listContainer}
-                />
-              ) : (
-                <Text style={styles.noDataText}>No units added.</Text>
-              )}
-            </>
+            <Text style={styles.noDataText}>No departments added.</Text>
           )}
         </>
-        )
-      }
+      ) : (
+        <>
+          <Text style={styles.subtitle}>Units</Text>
+          {property.units?.length ? (
+            <FlatList
+              data={property.units}
+              keyExtractor={(item) => item._id}
+              renderItem={renderItem}
+              contentContainerStyle={styles.listContainer}
+            />
+          ) : (
+            <Text style={styles.noDataText}>No units added.</Text>
+          )}
+        </>
+      )}
     </View>
   );
 }
@@ -153,17 +135,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color: '#333',
   },
   buttonContainer: {
     alignItems: 'flex-end',
@@ -182,11 +153,21 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 8,
   },
-  noDataText: {
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#333',
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  error: {
     fontSize: 16,
-    color: '#666',
+    color: 'red',
     textAlign: 'center',
-    marginTop: 20,
   },
   itemContainer: {
     flexDirection: 'row',
@@ -195,10 +176,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
     marginBottom: 12,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
   },
   itemDetails: {
     marginLeft: 16,
@@ -215,14 +192,10 @@ const styles = StyleSheet.create({
   listContainer: {
     paddingBottom: 20,
   },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  error: {
+  noDataText: {
     fontSize: 16,
-    color: 'red',
+    color: '#666',
     textAlign: 'center',
+    marginTop: 20,
   },
 });
