@@ -18,12 +18,12 @@ export default function CustomDrawerContent(props) {
   const { user, communities, setCommunities, setUser, setIsLogged } = useGlobalContext();
   const [loading, setLoading] = useState(true);
 
-  const logout = async () => {
-    await signOut();
-    setUser(null);
-    setIsLogged(false);
-    router.replace("/login");
-  };
+  // const logout = async () => {
+  //   await signOut();
+  //   setUser(null);
+  //   setIsLogged(false);
+  //   router.replace("/login");
+  // };
 
   useEffect(() => {
     const fetchCommunities = async () => {

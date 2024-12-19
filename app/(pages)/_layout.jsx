@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Drawer } from 'expo-router/drawer';
+import { DrawerItem } from '@react-navigation/drawer';
 import { router } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -97,19 +98,32 @@ function Layout() {
         />
 
         {/* Dynamic Property Screens */}
-        {properties.map((property) => (
+
+        { properties.map((property) => (
           <Drawer.Screen
-            key={property._id}
+            key={`${property.name}-${property._id}`}
             name={`property/${property._id}`}
             options={{
-              drawerLabel: property.name || 'Unnamed Property',
-              title: property.name || 'Unnamed Property',
+              drawerLabel: property.name || `Property ${property._id.substring(0, 5)}`,
+              title: property.name || `Property ${property._id.substring(0, 5)}`,
               drawerIcon: ({ size, color }) => (
                 <MaterialIcons name="apartment" size={size} color={color} />
               ),
             }}
           />
+
+          // <DrawerItem
+          //   key={property._id}
+          //   label={property.name || 'Unnamed Property'}
+          //   onPress={() => props.navigation.navigate(`property/${property._id}`)}
+          //   icon={({ size, color }) => (
+          //     <MaterialIcons name="apartment" size={size} color={color} />
+          //   )}
+          // />
+    
         ))}
+
+
       </Drawer>
     </GestureHandlerRootView>
   );
