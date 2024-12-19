@@ -5,30 +5,30 @@ import { env } from '../../../../../../constants';
 
 const API_BASE_URL = env.API_BASE_URL;
 
-export default function DepartmentDetails() {
-    const { departmentId } = useLocalSearchParams();
-    const [department, setDepartment] = useState(null);
+export default function UnitDetails() {
+    const { unitId } = useLocalSearchParams();
+    const [unit, setUnit] = useState(null);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [issueTitle, setIssueTitle] = useState('')
     const [issueDescription, setIssueDescription] = useState('');
 
-    // Fetch department details
+    // Fetch unit details
     useEffect(() => {
-        const fetchDepartment = async () => {
+        const fetchUnit = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/department/${departmentId}`);
+                const response = await fetch(`${API_BASE_URL}/unit/${unitId}`);
                 const data = await response.json();
-                setDepartment(data);
+                setUnit(data);
             } catch (error) {
-                console.error('Error fetching department:', error);
+                console.error('Error fetching unit:', error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchDepartment();
-    }, [departmentId]);
+        fetchUnit();
+    }, [unitId]);
 
     const handleAddIssue = () => {
         setModalVisible(true);
@@ -44,7 +44,7 @@ export default function DepartmentDetails() {
         return (
             <View style={styles.loaderContainer}>
                 <ActivityIndicator size="large" color="#4CAF50" />
-                <Text>Loading Department Details...</Text>
+                <Text>Loading Unit Details...</Text>
             </View>
         );
     }
@@ -56,14 +56,14 @@ export default function DepartmentDetails() {
                 <Text style={styles.addButtonText}>Add Issue</Text>
             </TouchableOpacity>
 
-            {/* Department Details */}
+            {/* Unit Details */}
             <Text style={styles.title}>Current Issues</Text>
             <View style={styles.detailsContainer}>
                 <Text style={styles.label}>There are no current issues</Text>
-                {/* <Text style={styles.value}>{departmentId}</Text>
+                {/* <Text style={styles.value}>{unitId}</Text>
 
-                <Text style={styles.label}>Department Name:</Text>
-                <Text style={styles.value}>{department?.name || 'N/A'}</Text> */}
+                <Text style={styles.label}>Unit Name:</Text>
+                <Text style={styles.value}>{unit?.name || 'N/A'}</Text> */}
             </View>
 
             {/* Modal */}

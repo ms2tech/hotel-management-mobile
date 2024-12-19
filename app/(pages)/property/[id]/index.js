@@ -49,8 +49,20 @@ export default function PropertyScreen() {
     }
   }, [property, navigation]);
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.itemContainer}>
+  const renderDepartment = ({ item }) => (
+    <TouchableOpacity style={styles.itemContainer} onPress={() => { router.push(`property/${id}/department/${item._id}`)}} >
+      <MaterialIcons name="apartment" size={24} color="#6151DC" />
+      <View style={styles.itemDetails}>
+        <Text style={styles.itemName}>{item.name}</Text>
+        <Text style={styles.itemDescription}>
+          {item.description || 'No description available'}
+        </Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderUnit = ({ item }) => (
+    <TouchableOpacity style={styles.itemContainer} onPress={() => { router.push(`property/${id}/unit/${item._id}`)}}>
       <MaterialIcons name="apartment" size={24} color="#6151DC" />
       <View style={styles.itemDetails}>
         <Text style={styles.itemName}>{item.name}</Text>
@@ -104,7 +116,7 @@ export default function PropertyScreen() {
             <FlatList
               data={property.departments}
               keyExtractor={(item) => item._id}
-              renderItem={renderItem}
+              renderItem={renderDepartment}
               contentContainerStyle={styles.listContainer}
             />
           ) : (
@@ -118,7 +130,7 @@ export default function PropertyScreen() {
             <FlatList
               data={property.units}
               keyExtractor={(item) => item._id}
-              renderItem={renderItem}
+              renderItem={renderUnit}
               contentContainerStyle={styles.listContainer}
             />
           ) : (

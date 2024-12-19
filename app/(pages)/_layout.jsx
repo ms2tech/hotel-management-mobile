@@ -96,34 +96,8 @@ function Layout() {
           }}
         />
 
-        {/* Hidden Screens */}
-        <Drawer.Screen
-          name="property/[id]/add-department"
-          options={{
-            drawerLabel: () => null, // Hide from drawer
-            drawerItemStyle: { display: 'none' },
-            title: 'Add Department',
-          }}
-        />
-
-        <Drawer.Screen
-          name="property/[id]/add-unit"
-          options={{
-            drawerLabel: "Add Unit",
-            drawerItemStyle: { display: 'none' }, // Hides this screen in the drawer
-          }}
-        />
-        <Drawer.Screen
-          name="property/[id]/department/[departmentId]"
-          options={{
-            drawerLabel: () => null, // Hide from drawer
-            drawerItemStyle: { display: 'none' },
-            title: 'Department',
-          }}
-        />
-
         {/* Dynamic Property Screens */}
-        {/* {properties.map((property) => (
+        {properties.map((property) => (
           <Drawer.Screen
             key={property._id}
             name={`property/${property._id}`}
@@ -135,7 +109,7 @@ function Layout() {
               ),
             }}
           />
-        ))} */}
+        ))}
       </Drawer>
     </GestureHandlerRootView>
   );
@@ -184,6 +158,4 @@ const styles = StyleSheet.create({
   },
 });
 
-
-
-export default Layout
+export default Layout;
